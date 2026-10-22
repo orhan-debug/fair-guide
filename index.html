@@ -198,10 +198,9 @@ const STATUSES = [
 const STATUS_LABEL = Object.fromEntries(STATUSES.map(s=>[s.k,s.label]));
 const DOT = {todo:"#1f4e79",visited:"#1a7f4b",follow:"#d48a00",absent:"#b42318",skip:"#98a2b3"};
 
-/* ---------- Kayıt: telefonda önbellek + Supabase'de ortak kayıt ---------- */
+/* ---------- Kayıt: telefonda önbellek + ortak not sunucusu (fair.importbonus.ru) ---------- */
 const FAIR = "metal-fuar-2026";
-const SB_URL = "https://ovjdxocmwrbjxkfrbwin.supabase.co/rest/v1/fair_visits";
-const SB_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92amR4b2Ntd3JianhrZnJid2luIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMwOTY3NjEsImV4cCI6MjA5ODY3Mjc2MX0.4yHaaY3BzSdKSomHhPeoMCQ7HzO7hz7ssjTV-bt1ZaI";
+const API_URL = "https://fair.importbonus.ru/api/visits";
 let store = {visits:{}, extra:[], pending:{}};
 function load(){ try{ const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.visits) store={visits:s.visits||{},extra:s.extra||[],pending:s.pending||{}}; }catch(e){} }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(store)); }catch(e){} return true; }
@@ -214,7 +213,7 @@ function accessKey(){
   try{ return localStorage.getItem("fairKey")||""; }catch(e){ return ""; }
 }
 const FKEY = accessKey();
-const sbHeaders = extra => Object.assign({apikey:SB_ANON, Authorization:"Bearer "+SB_ANON, "x-fair-key":FKEY, "Content-Type":"application/json"}, extra||{});
+const apiHeaders = () => ({"x-fair-key":FKEY, "Content-Type":"application/json"});
 
 function rowData(id){
   const d=Object.assign({}, store.visits[id]||{status:"todo"});
@@ -229,8 +228,8 @@ let syncState="idle";
 async function flush(){
   const ids=Object.keys(store.pending); if(!ids.length||!FKEY) { setSync(); return; }
   try{
-    const body=ids.map(id=>({id:FAIR+":"+id, fair:FAIR, cid:id, data:rowData(id), updated_at:new Date().toISOString()}));
-    const r=await fetch(SB_URL+"?on_conflict=id",{method:"POST",headers:sbHeaders({Prefer:"resolution=merge-duplicates,return=minimal"}),body:JSON.stringify(body)});
+    const body=ids.map(id=>({fair:FAIR, cid:id, data:rowData(id)}));
+    const r=await fetch(API_URL,{method:"POST",headers:apiHeaders(),body:JSON.stringify(body)});
     if(!r.ok) throw new Error(r.status);
     ids.forEach(id=>delete store.pending[id]); save(); syncState="ok";
   }catch(e){ syncState=navigator.onLine===false?"offline":"error"; }
@@ -239,7 +238,7 @@ async function flush(){
 async function pull(){
   if(!FKEY) return;
   try{
-    const r=await fetch(SB_URL+"?fair=eq."+encodeURIComponent(FAIR)+"&select=cid,data",{headers:sbHeaders()});
+    const r=await fetch(API_URL+"?fair="+encodeURIComponent(FAIR),{headers:apiHeaders(),cache:"no-store"});
     if(!r.ok) throw new Error(r.status);
     const rows=await r.json(); let changed=false;
     for(const {cid,data} of rows){
