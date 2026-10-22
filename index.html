@@ -100,6 +100,11 @@ svg.map text{font-family:inherit}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap}
 .hidden{display:none!important}
+.cat{display:inline-block;font-size:11px;font-weight:800;padding:2px 7px;border-radius:6px;margin-right:4px;vertical-align:middle}
+.cat-A{background:#1f4e79;color:#fff}
+.cat-B{background:var(--line);color:var(--muted)}
+.card.isB{opacity:.92}
+.card.isB .stand{background:var(--bg);color:var(--muted)}
 .sync{font-size:12px;opacity:.85;margin-top:4px}
 .quick{flex:none;align-self:center;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:8px 10px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
 .quick.done{background:var(--ok-soft);color:var(--ok);border-color:transparent}
@@ -159,8 +164,28 @@ const BASE = [
  [17,"BRUKER NANO GMBH","Almanya","H4","H4-E145","Elektron mikroskopları için EDS/EBSD analiz sistemleri, mikro-XRF ve yüzey ölçüm cihazları","Spektrometre/analizör başına 30–250 bin $"],
  [18,"HONEYWELL ECLIPSE","İrlanda","H4","H4-B102","Endüstriyel ısıtma ve ergitme fırınları için brülörler ve yanma sistemleri","Fırın/sistem başına 200 bin – 5 milyon $"],
  [19,"MULTISERW","Polonya","H8","H8-E120","Döküm kumu ve kalıp malzemeleri için test cihazları ve laboratuvar ekipmanları","Cihaz başına 1–50 bin $; NDT/muayene sistemleri 100 bin – 1 milyon $"],
- [20,"TIMKEN COMPANY","ABD","H6","H6-C137","Haddehaneler ve ağır sanayi için konik makaralı rulmanlar, dişli kutuları ve güç aktarım ürünleri","Rulman başına 50 $ – 50 bin $ (ağır hadde ebatları 5–50 bin $)"]
-].map(r=>({id:String(r[0]),rank:r[0],name:r[1],country:r[2],hall:r[3],stand:r[4],offer:r[5],price:r[6]}));
+ [20,"TIMKEN COMPANY","ABD","H6","H6-C137","Haddehaneler ve ağır sanayi için konik makaralı rulmanlar, dişli kutuları ve güç aktarım ürünleri","Rulman başına 50 $ – 50 bin $ (ağır hadde ebatları 5–50 bin $)"],
+ [21,"G.N.R. S.R.L. – ANALYTICAL INSTRUMENTS GROUP","İtalya","H4","H4-B150","Metal analizi için OES ve XRF spektrometreleri, X-ışını kırınım (XRD) cihazları","Spektrometre/analizör başına 30–250 bin $","B"],
+ [22,"TELEDYNE ICM","Belçika","H8","H8-D140","Döküm ve kaynak muayenesi için endüstriyel radyografi (X-ışını) cihazları","Cihaz başına 1–50 bin $; NDT/muayene sistemleri 100 bin – 1 milyon $","B"],
+ [23,"DEFELSKO CORPORATION","ABD","H4","H4-C125","Kaplama kalınlığı, yüzey profili ve çiy noktası ölçüm cihazları","Cihaz başına 1–50 bin $; NDT/muayene sistemleri 100 bin – 1 milyon $","B"],
+ [24,"ALD VACUUM TECHNOLOGIES GMBH","Almanya","H4","H4-C105","Vakum ergitme (VIM, VAR, ESR) ve vakum ısıl işlem fırınları","Vakum fırını başına 1–20 milyon $","B"],
+ [25,"POLYTEC GMBH","Almanya","H4","H4-E165","Lazer doppler titreşim ve hız ölçerler, temassız uzunluk ve yüzey ölçüm sistemleri","Cihaz başına 1–50 bin $; NDT/muayene sistemleri 100 bin – 1 milyon $","B"],
+ [26,"KANTHAL","İsveç","H4","H4-C125","Elektrikli fırınlar için ısıtma telleri, ısıtıcı elemanlar ve ısıtma sistemleri","Fırın/sistem başına 200 bin – 5 milyon $","B"],
+ [27,"NORD-LOCK INTERNATIONAL AB","İsveç","H5","H5-E145","Kritik bağlantılar için kama kilitli rondela ve somunlar, cıvata gerdirme sistemleri","Bağlantı elemanı/gerdirici başına 50 $ – 5 bin $","B"],
+ [28,"WHEELABRATOR GROUP GMBH","Almanya","H4","H4-C105","Döküm ve çelik parçalar için kumlama/bilyalı püskürtme makineleri ve yedek parçaları","Makine/hat başına 200 bin – 3 milyon $","B"],
+ [29,"WELDOTHERM GESELLSCHAFT FÜR WARMETECHNIK GMBH","Almanya","H5","H5-E145","Yerinde ısıl işlem ekipmanları: kaynak öncesi/sonrası ısıl işlem için ısıtıcılar ve kontrol üniteleri","Fırın/sistem başına 200 bin – 5 milyon $","B"],
+ [30,"LAP MEASUREMENT TECHNOLOGY GMBH","Almanya","H6","H6-C120","Haddehaneler için lazer tabanlı boyut, kalınlık ve profil ölçüm sistemleri","Cihaz başına 1–50 bin $; NDT/muayene sistemleri 100 bin – 1 milyon $","B"],
+ [31,"PROCEQ SCREENING EAGLE","İsviçre","H8","H8-D140","Beton, metal ve kompozitler için tahribatsız muayene cihazları: ultrasonik kalınlık/kusur dedektörleri, sertlik test cihazları","Cihaz başına 1–50 bin $; NDT/muayene sistemleri 100 bin – 1 milyon $","B"],
+ [32,"KOWOTEST","Almanya","H8","H8-D140","Malzeme test cihazları: darbe (Charpy) test makineleri, sertlik test cihazları ve numune hazırlama ekipmanları","Cihaz başına 1–50 bin $; NDT/muayene sistemleri 100 bin – 1 milyon $","B"],
+ [33,"STARMANS ELECTRONICS S.R.O (STARMANS)","Çekya","H8","H8-C171","Ultrasonik ve girdap akımı tahribatsız muayene (NDT) cihazları, otomatik muayene sistemleri ve yazılımları","Cihaz başına 1–50 bin $; NDT/muayene sistemleri 100 bin – 1 milyon $","B"],
+ [34,"ACCRETECH GMBH","Almanya","H8","H8-C140","Yüzey pürüzlülüğü ve kontur ölçüm cihazları, koordinat ölçüm makineleri (CMM), hassas ölçüm sistemleri","Cihaz başına 1–50 bin $; NDT/muayene sistemleri 100 bin – 1 milyon $","B"],
+ [35,"DUERR NDT","Almanya","H8","H8-D140","Endüstriyel dijital radyografi sistemleri: X-ışını görüntüleme plakaları, tarayıcılar ve NDT yazılımları","Cihaz başına 1–50 bin $; NDT/muayene sistemleri 100 bin – 1 milyon $","B"],
+ [36,"LAEMPE MÖSSNER SINTO GMBH","Almanya","H4","H4-B110","Dökümhaneler için maça üretim makineleri, kum hazırlama ve gazlama sistemleri, maça atölyesi otomasyonu","Makine/hat başına 200 bin – 3 milyon $","B"],
+ [37,"EVERTZ HYDROTECHNIK GMBH & CO. KG","Almanya","H5","H5-C190","Haddehaneler için yüksek basınçlı tufal giderme (descaling) sistemleri, pompalar ve nozullar","Tufal giderme sistemi başına 0,5–3 milyon $","B"],
+ [38,"MASCHINENFABRIK HERKULES GMBH & CO. KG","Almanya","H5","H5-C190","Hadde merdanesi taşlama makineleri, ağır tip torna ve taşlama tezgahları, merdane atölyesi çözümleri","Makine/sistem başına 100 bin – 2 milyon $","B"],
+ [39,"RHI MAGNESITA GMBH","Avusturya","H5","H5-F130","Çelik, demir dışı metal ve çimento endüstrisi için refrakter malzemeler, sürgülü kapak sistemleri ve refrakter hizmetleri","Ton başına 0,5–3 bin $ (standart); ton başına 3–15 bin $ (özel/şekilli)","B"],
+ [40,"LECHLER GMBH","Almanya","H5","H5-E130","Endüstriyel nozullar: sürekli dökümde soğutma, tufal giderme ve gaz soğutma için püskürtme sistemleri","Makine/sistem başına 100 bin – 2 milyon $","B"]
+].map(r=>({id:String(r[0]),rank:r[0],name:r[1],country:r[2],hall:r[3],stand:r[4],offer:r[5],price:r[6],cat:r[7]||"A"}));
 
 const KEY = "fairVisitGuide.v1";
 const STATUSES = [
@@ -251,16 +276,19 @@ function parseStand(stand){
 }
 function standSort(a,b){
   const pa=parseStand(a.stand)||{}, pb=parseStand(b.stand)||{};
-  return (a.hall||"").localeCompare(b.hall||"",undefined,{numeric:true}) || (pa.row||"").localeCompare(pb.row||"") || (pa.num||0)-(pb.num||0) || a.rank-b.rank;
+  return (a.hall||"").localeCompare(b.hall||"",undefined,{numeric:true}) || (pa.row||"").localeCompare(pb.row||"") || (pa.num||0)-(pb.num||0) || catOf(a).localeCompare(catOf(b)) || a.rank-b.rank;
 }
 
 /* ---------- Filtreler ---------- */
-let fHall="all", fStatus="all", q="";
+let fHall="all", fStatus="all", fCat="all", q="";
+const catOf = c => c.cat||"A";
 function halls(){ return [...new Set(all().map(c=>c.hall))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true})); }
 
 function renderChips(){
   document.getElementById("hallChips").innerHTML =
-    ["all",...halls()].map(h=>`<button class="chip ${fHall===h?"on":""}" data-h="${esc(h)}">${h==="all"?"Tüm salonlar":esc(h)}</button>`).join("");
+    ["all",...halls()].map(h=>`<button class="chip ${fHall===h?"on":""}" data-h="${esc(h)}">${h==="all"?"Tüm salonlar":esc(h)}</button>`).join("")+
+    `<span style="flex-basis:100%;height:0"></span>`+
+    [["all","A + B"],["A","A · Öncelikli"],["B","B · İkincil"]].map(([k,l])=>`<button class="chip ${fCat===k?"on":""}" data-c="${k}">${l} (${k==="all"?all().length:all().filter(c=>catOf(c)===k).length})</button>`).join("");
   const counts = {all:all().length}; STATUSES.forEach(s=>counts[s.k]=0);
   all().forEach(c=>counts[visit(c.id).status]++);
   const tabs=[["all","Tümü"],["todo","Gidilecek"],["visited","Gidildi"],["follow","Takip"]];
@@ -270,6 +298,7 @@ function renderChips(){
 
 function matches(c){
   if(fHall!=="all" && c.hall!==fHall) return false;
+  if(fCat!=="all" && catOf(c)!==fCat) return false;
   const st=visit(c.id).status;
   if(fStatus!=="all" && st!==fStatus) return false;
   if(!q) return true;
@@ -301,10 +330,10 @@ function renderList(){
     for(const c of items){
       if(c.hall!==last){ last=c.hall; const n=items.filter(x=>x.hall===c.hall).length; html+=`<div class="hallhead">Salon ${esc(c.hall)} · ${n}</div>`; }
       const v=visit(c.id), p=parseStand(c.stand), sh=sameStand(c);
-      html+=`<div class="card" data-id="${esc(c.id)}">
+      html+=`<div class="card ${catOf(c)==="B"?"isB":""}" data-id="${esc(c.id)}">
         <div class="stand">${esc(c.hall)}<b>${p?esc(p.row+p.num):esc(c.stand)}</b></div>
         <div class="main">
-          <div class="name">${esc(c.name)} <span class="badge b-${v.status}">${STATUS_LABEL[v.status]}</span>${v.rating?` <span class="meta">${"★".repeat(v.rating)}</span>`:""}</div>
+          <div class="name"><span class="cat cat-${catOf(c)}">${catOf(c)}</span>${esc(c.name)} <span class="badge b-${v.status}">${STATUS_LABEL[v.status]}</span>${v.rating?` <span class="meta">${"★".repeat(v.rating)}</span>`:""}</div>
           <div class="meta">#${esc(c.rank)} · ${esc(c.country)} · ${esc(c.stand)}</div>
           <div class="offer">${esc(c.offer)}</div>
           ${v.visitedAt?`<div class="when">✓ Ziyaret: ${esc(fmtWhen(v.visitedAt))}</div>`:""}
@@ -314,9 +343,10 @@ function renderList(){
     }
     el.innerHTML=html;
   }
-  const done=all().filter(c=>["visited","follow","absent","skip"].includes(visit(c.id).status)).length, tot=all().length;
-  document.getElementById("progTxt").textContent=`${done} / ${tot} tamamlandı`;
-  document.getElementById("progBar").style.width=(tot?done/tot*100:0)+"%";
+  const isDone=c=>["visited","follow","absent","skip"].includes(visit(c.id).status);
+  const A=all().filter(c=>catOf(c)==="A"), doneA=A.filter(isDone).length, done=all().filter(isDone).length, tot=all().length;
+  document.getElementById("progTxt").textContent=`A: ${doneA} / ${A.length} · Toplam: ${done} / ${tot}`;
+  document.getElementById("progBar").style.width=(A.length?doneA/A.length*100:0)+"%";
 }
 
 /* ---------- Salon şeması ---------- */
@@ -343,11 +373,11 @@ function hallMap(hall, selId){
     const flip=lastY[p.row]!==undefined && cy-lastY[p.row]<12 && !lastY[p.row+"f"];
     lastY[p.row]=cy; lastY[p.row+"f"]=flip;
     const st=g.map(z=>visit(z.c.id).status); const col=DOT[st.includes("todo")?"todo":st[0]];
-    const label=p.row+p.num;
+    const label=p.row+p.num, onlyB=g.every(z=>catOf(z.c)==="B");
     const dot=`<g class="mapdot" data-id="${esc(g[0].c.id)}">
       ${isSel?`<circle class="pulse" cx="${cx}" cy="${cy}" r="9" fill="#e5484d"/>`:""}
-      <circle cx="${cx}" cy="${cy}" r="${isSel?9:7}" fill="${isSel?"#e5484d":col}" stroke="var(--card)" stroke-width="2"/>
-      ${g.length>1?`<text x="${cx}" y="${cy+3.5}" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">${g.length}</text>`:""}
+      <circle cx="${cx}" cy="${cy}" r="${isSel?9:7}" fill="${isSel?"#e5484d":onlyB?"var(--card)":col}" stroke="${onlyB&&!isSel?col:"var(--card)"}" stroke-width="2"/>
+      ${g.length>1?`<text x="${cx}" y="${cy+3.5}" text-anchor="middle" font-size="9" font-weight="700" fill="${onlyB&&!isSel?col:"#fff"}">${g.length}</text>`:""}
       <text x="${flip?cx-12:cx+12}" y="${cy+4}" text-anchor="${flip?"end":"start"}" font-size="10" font-weight="${isSel?700:500}" fill="var(--ink)">${label}</text>
       <title>${esc(g.map(z=>z.c.name).join(" / "))}</title></g>`;
     if(isSel) sel=dot; else s+=dot;
@@ -379,7 +409,7 @@ function openCompany(id){
       <div style="margin-top:10px">${hallMap(c.hall,c.id)}</div>${mapNote}
     </div>
     <div class="box"><h3>Firma</h3>
-      <div class="kv"><span>Sıra</span><div>#${esc(c.rank)}</div><span>Ülke</span><div>${esc(c.country)}</div>
+      <div class="kv"><span>Kategori</span><div><span class="cat cat-${catOf(c)}">${catOf(c)}</span>${catOf(c)==="A"?"Öncelikli ziyaret":"İkincil ziyaret (zaman kalırsa)"}</div><span>Sıra</span><div>#${esc(c.rank)}</div><span>Ülke</span><div>${esc(c.country)}</div>
       <span>Ürün / hizmet</span><div>${esc(c.offer)}</div><span>Tahmini fiyat</span><div>${esc(c.price)}</div></div>
     </div>
     <div class="box" id="visitBox"><h3>Ziyaret notları <span class="saved" id="savedMsg">✓ kaydedildi</span></h3>
@@ -444,8 +474,8 @@ function openMaps(){
   openSheet("Salon planları", hs.map(h=>{
     const list=all().filter(c=>c.hall===h).sort(standSort);
     return `<div class="box"><h3>Salon ${esc(h)} · ${list.length} firma</h3>${hallMap(h,null)}
-      <div class="legend"><span><i style="background:${DOT.todo}"></i>Gidilecek</span><span><i style="background:${DOT.visited}"></i>Gidildi</span><span><i style="background:${DOT.follow}"></i>Takip</span><span><i style="background:${DOT.absent}"></i>Kimse yok</span></div>
-      <ol style="margin:8px 0 0;padding-left:20px;font-size:14px">${list.map(c=>`<li><a href="#" data-open="${esc(c.id)}">${esc(c.stand)} — ${esc(c.name)}</a> <span class="badge b-${visit(c.id).status}">${STATUS_LABEL[visit(c.id).status]}</span></li>`).join("")}</ol></div>`;
+      <div class="legend"><span><i style="background:${DOT.todo}"></i>Gidilecek</span><span><i style="background:${DOT.visited}"></i>Gidildi</span><span><i style="background:${DOT.follow}"></i>Takip</span><span><i style="background:${DOT.absent}"></i>Kimse yok</span><span><i style="background:var(--card);border:2px solid ${DOT.todo};box-sizing:border-box"></i>Yalnız B</span></div>
+      <ol style="margin:8px 0 0;padding-left:20px;font-size:14px">${list.map(c=>`<li><span class="cat cat-${catOf(c)}">${catOf(c)}</span><a href="#" data-open="${esc(c.id)}">${esc(c.stand)} — ${esc(c.name)}</a> <span class="badge b-${visit(c.id).status}">${STATUS_LABEL[visit(c.id).status]}</span></li>`).join("")}</ol></div>`;
   }).join("")+mapNote);
   const body=document.getElementById("sheetBody");
   body.querySelectorAll("[data-open]").forEach(a=>a.onclick=e=>{e.preventDefault(); openCompany(a.dataset.open);});
@@ -459,12 +489,13 @@ function openAdd(prefill){
     <div><label>Stand (ör. H6-C150)</label><input type="text" id="a_stand"></div></div>
     <label>Ne sunuyorlar</label><textarea id="a_offer" style="min-height:70px"></textarea>
     <label>Tahmini fiyat</label><input type="text" id="a_price">
+    <label>Kategori</label><select id="a_cat"><option value="A">A · Öncelikli</option><option value="B" selected>B · İkincil</option></select>
     <p><button class="btn primary" id="a_save">Ekle ve aç</button></p></div>`);
   document.getElementById("a_save").onclick=()=>{
     const name=document.getElementById("a_name").value.trim(); if(!name){alert("Firma adını girin");return;}
     const stand=document.getElementById("a_stand").value.trim().toLocaleUpperCase("en"), p=parseStand(stand);
     const c={id:"x"+Date.now(),rank:all().length+1,custom:true,name,country:document.getElementById("a_country").value.trim(),
-      hall:p?p.hall:(stand.split("-")[0]||"?"),stand,offer:document.getElementById("a_offer").value.trim(),price:document.getElementById("a_price").value.trim()};
+      hall:p?p.hall:(stand.split("-")[0]||"?"),stand,offer:document.getElementById("a_offer").value.trim(),price:document.getElementById("a_price").value.trim(),cat:document.getElementById("a_cat").value};
     store.extra.push(c); store.visits[c.id]={status:"todo",updated:new Date().toISOString()}; commit(c.id); renderList(); openCompany(c.id);
   };
 }
@@ -478,7 +509,7 @@ function download(name, text, type){
 const stamp=()=>new Date().toISOString().slice(0,16).replace(/[:T]/g,"-");
 function rows(){
   return all().slice().sort(standSort).map(c=>{ const v=visit(c.id); return {
-    "Sıra":c.rank,"Firma":c.name,"Ülke":c.country,"Salon":c.hall,"Stand":c.stand,"Ürün / hizmet":c.offer,"Tahmini fiyat":c.price,
+    "Sıra":c.rank,"Kategori":catOf(c),"Firma":c.name,"Ülke":c.country,"Salon":c.hall,"Stand":c.stand,"Ürün / hizmet":c.offer,"Tahmini fiyat":c.price,
     "Durum":STATUS_LABEL[v.status],"Ziyaret zamanı":v.visitedAt?fmtWhen(v.visitedAt):"","İlgi":v.rating||"","Görüşülen kişi":v.contact||"","Pozisyon":v.role||"","Telefon":v.phone||"","E-posta":v.email||"",
     "Kartvizit":v.card?"evet":"","Katalog":v.catalog?"evet":"","Yorumlar":v.notes||"","Sonraki adım":v.next||"",
     "Güncelleme":v.updated?new Date(v.updated).toLocaleString("tr-TR"):"","Fuarda eklendi":c.custom?"evet":""}; });
@@ -489,7 +520,7 @@ function toCSV(){
 }
 function toText(){
   return rows().filter(r=>r["Durum"]!==STATUS_LABEL.todo).map(r=>
-    `${r.Stand} — ${r["Firma"]} [${r["Durum"]}${r["Ziyaret zamanı"]?", "+r["Ziyaret zamanı"]:""}${r["İlgi"]?", "+"★".repeat(r["İlgi"]):""}]`+
+    `${r.Stand} — ${r["Firma"]} (${r["Kategori"]}) [${r["Durum"]}${r["Ziyaret zamanı"]?", "+r["Ziyaret zamanı"]:""}${r["İlgi"]?", "+"★".repeat(r["İlgi"]):""}]`+
     (r["Görüşülen kişi"]?`\nKişi: ${r["Görüşülen kişi"]}${r["Pozisyon"]?" ("+r["Pozisyon"]+")":""} ${r["Telefon"]} ${r["E-posta"]}`.trimEnd():"")+
     (r["Yorumlar"]?`\n${r["Yorumlar"]}`:"")+(r["Sonraki adım"]?`\nSonraki adım: ${r["Sonraki adım"]}`:"")).join("\n\n") || "Henüz ziyaret kaydı yok.";
 }
@@ -527,7 +558,8 @@ document.getElementById("importFile").onchange=e=>{
 
 /* ---------- Bağlantılar ---------- */
 document.getElementById("q").addEventListener("input",e=>{ q=e.target.value.trim(); renderList(); });
-document.getElementById("hallChips").onclick=e=>{ const b=e.target.closest("[data-h]"); if(b){ fHall=b.dataset.h; renderList(); } };
+document.getElementById("hallChips").onclick=e=>{ const b=e.target.closest("[data-h]"), c=e.target.closest("[data-c]");
+  if(b){ fHall=b.dataset.h; renderList(); } if(c){ fCat=c.dataset.c; renderList(); } };
 document.getElementById("statusTabs").onclick=e=>{ const b=e.target.closest("[data-s]"); if(b){ fStatus=b.dataset.s; renderList(); } };
 document.getElementById("list").onclick=e=>{
   const qb=e.target.closest("[data-quick]");
