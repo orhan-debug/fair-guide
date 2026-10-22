@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fuar Ziyaret Rehberi</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1f4e79">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Fuar Rehberi">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
+<style>
+:root{
+  --bg:#f4f6f9; --card:#fff; --ink:#1b2430; --muted:#667085; --line:#e3e7ee;
+  --brand:#1f4e79; --brand-soft:#e7eff8; --ok:#1a7f4b; --ok-soft:#e3f4ea;
+  --warn:#b26a00; --warn-soft:#fdf1dc; --bad:#b42318; --bad-soft:#fde8e6;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0f141b; --card:#18202b; --ink:#e6ebf2; --muted:#98a2b3; --line:#2a3442;
+    --brand:#6aa6e0; --brand-soft:#1b2a3b; --ok:#4cc38a; --ok-soft:#173326;
+    --warn:#f0b04a; --warn-soft:#3a2c14; --bad:#f2827a; --bad-soft:#3d1c1a; }
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+header{position:sticky;top:0;z-index:5;background:var(--brand);color:#fff;padding:12px 16px 10px;
+  padding-top:max(12px,env(safe-area-inset-top))}
+header h1{margin:0;font-size:18px;font-weight:650}
+.progress{display:flex;align-items:center;gap:10px;margin-top:6px;font-size:13px;opacity:.95}
+.bar{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.25);overflow:hidden}
+.bar i{display:block;height:100%;background:#7fe0a8;width:0}
+.wrap{max-width:900px;margin:0 auto;padding:12px 16px 90px}
+.search{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);font-size:16px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 4px}
+.chip{border:1px solid var(--line);background:var(--card);padding:6px 12px;border-radius:999px;cursor:pointer;font-size:14px}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.tabs{display:flex;gap:6px;margin:8px 0 12px}
+.tabs .chip{flex:1;text-align:center}
+.hallhead{margin:18px 0 8px;font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;
+  display:flex;gap:12px;align-items:flex-start;cursor:pointer}
+.card:active{transform:scale(.995)}
+.stand{min-width:76px;text-align:center;background:var(--brand-soft);color:var(--brand);border-radius:8px;padding:6px 4px;font-weight:700;font-size:13px}
+.stand b{display:block;font-size:20px;line-height:1.1}
+.card .main{flex:1;min-width:0}
+.card .name{font-weight:650}
+.card .meta{color:var(--muted);font-size:13px}
+.card .offer{font-size:13px;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:4px;vertical-align:middle}
+.b-todo{background:var(--brand-soft);color:var(--brand)}
+.b-visited{background:var(--ok-soft);color:var(--ok)}
+.b-follow{background:var(--warn-soft);color:var(--warn)}
+.b-absent,.b-skip{background:var(--bad-soft);color:var(--bad)}
+.shared{font-size:12px;color:var(--warn);margin-top:3px}
+.empty{text-align:center;color:var(--muted);padding:30px}
+.fab{position:fixed;right:16px;bottom:max(16px,env(safe-area-inset-bottom));z-index:6;display:flex;gap:8px}
+.btn{border:1px solid var(--line);background:var(--card);padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.small{padding:6px 10px;font-size:13px}
+/* sheet */
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10;display:none}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-height:94vh;overflow:auto;background:var(--bg);z-index:11;
+  border-radius:16px 16px 0 0;display:none;padding:0 0 max(20px,env(safe-area-inset-bottom))}
+.sheet.open,.sheet-bg.open{display:block}
+@media(min-width:760px){.sheet{left:50%;transform:translateX(-50%);width:720px;bottom:3vh;border-radius:16px;max-height:94vh}}
+.sheet-head{position:sticky;top:0;background:var(--bg);padding:14px 16px 8px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:flex-start;z-index:2}
+.sheet-head h2{margin:0;font-size:17px;flex:1}
+.sheet-body{padding:12px 16px}
+.x{border:0;background:var(--card);width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;flex:none}
+.box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:12px}
+.box h3{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.where{display:flex;gap:10px;flex-wrap:wrap}
+.where div{flex:1;min-width:90px;background:var(--brand-soft);border-radius:10px;padding:8px 10px}
+.where small{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+.where b{font-size:20px;color:var(--brand)}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:6px 10px;font-size:14px}
+.kv span{color:var(--muted)}
+label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
+input[type=text],input[type=tel],input[type=email],textarea,select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:16px}
+textarea{min-height:110px;resize:vertical}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{border:1px solid var(--line);background:var(--bg);padding:8px 10px;border-radius:8px;cursor:pointer;font-size:14px}
+.seg button.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.stars button{font-size:26px;line-height:1;border:0;background:none;cursor:pointer;color:var(--line);padding:0 2px}
+.stars button.on{color:#f5a623}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:480px){.row2{grid-template-columns:1fr}}
+.saved{color:var(--ok);font-size:13px;margin-left:8px;opacity:0;transition:opacity .3s}
+.saved.show{opacity:1}
+.hint{font-size:12px;color:var(--muted)}
+svg.map{width:100%;height:auto;display:block}
+svg.map text{font-family:inherit}
+.mapdot{cursor:pointer}
+.pulse{animation:pulse 1.4s ease-out infinite;transform-origin:center;transform-box:fill-box}
+@keyframes pulse{0%{opacity:.7;transform:scale(1)}100%{opacity:0;transform:scale(2.6)}}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+.hidden{display:none!important}
+.sync{font-size:12px;opacity:.85;margin-top:4px}
+.quick{flex:none;align-self:center;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:8px 10px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.quick.done{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.when{font-size:12px;color:var(--ok);margin-top:3px;font-weight:600}
+.timerow{display:flex;gap:8px;align-items:center}
+.timerow input{flex:1}
+input[type=datetime-local]{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:16px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Fuar Ziyaret Rehberi</h1>
+  <div class="progress"><span id="progTxt">0 / 0 tamamlandı</span><div class="bar"><i id="progBar"></i></div></div>
+  <div class="sync" id="syncTxt">☁ Bağlanıyor…</div>
+</header>
+
+<div class="wrap">
+  <input id="q" class="search" type="search" placeholder="Firma, salon, stand (ör. H4-B104) veya ürün ara…" autocomplete="off">
+  <div class="chips" id="hallChips"></div>
+  <div class="tabs" id="statusTabs"></div>
+  <div id="list"></div>
+</div>
+
+<div class="fab">
+  <button class="btn" id="btnMaps">🗺 Salonlar</button>
+  <button class="btn" id="btnMenu">⋯ Dışa aktar</button>
+  <button class="btn primary" id="btnAdd">＋ Firma</button>
+</div>
+
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-head"><h2 id="sheetTitle"></h2><button class="x" id="sheetClose" aria-label="Kapat">✕</button></div>
+  <div class="sheet-body" id="sheetBody"></div>
+</div>
+
+<input type="file" id="importFile" accept="application/json,.json" class="hidden">
+
+<script>
+/* ---------- Temel veri (başka bir fuar için burayı düzenleyin) ---------- */
+const BASE = [
+ [1,"THERMO FISHER SCIENTIFIC","ABD","H4","H4-D133","Metal analizi için optik emisyon (OES) ve XRF spektrometreleri, laboratuvar analiz cihazları ve sarf malzemeleri","Spektrometre/analizör başına 30–250 bin $"],
+ [2,"THERMO FISHER SCIENTIFIC (GERMANY)GMBH","Almanya","H4","H4-B104","Metal ve malzeme analizi için OES/XRF spektrometreleri, kütle spektrometreleri ve laboratuvar cihazları","Spektrometre/analizör başına 30–250 bin $"],
+ [3,"BRUKER AXS SE","Almanya","H4","H4-E145","X-ışını kırınımı (XRD) ve X-ışını floresans (XRF) cihazları; metal ve malzeme analizi için spektrometreler","Spektrometre/analizör başına 30–250 bin $"],
+ [4,"HONEYWELL KROMSCHRÖDER","Almanya","H4","H4-B102","Endüstriyel fırınlar için gaz brülörleri, yanma kontrol sistemleri, reküperatörler, gaz vanaları ve emniyet ekipmanları","Fırın/sistem başına 200 bin – 5 milyon $"],
+ [5,"SCHAEFFLER GROUP","Almanya","H6","H6-C170","Haddehaneler ve ağır sanayi için rulmanlar, lineer sistemler ve durum izleme (condition monitoring) çözümleri","Rulman başına 50 $ – 50 bin $ (ağır hadde ebatları 5–50 bin $)"],
+ [6,"LECO CORPORATION","ABD","H5","H5-A125","Metallerde C, S, O, N, H elementel analiz cihazları, OES/GDS spektrometreleri ve metalografik numune hazırlama ekipmanları","Spektrometre/analizör başına 30–250 bin $"],
+ [7,"HERZOG MASCHINENFABRIK GMBH","Almanya","H4","H4-B104","Çelik ve döküm laboratuvarları için otomatik numune hazırlama makineleri ve tam otomatik laboratuvar sistemleri","Spektrometre/analizör başına 30–250 bin $"],
+ [8,"SPECTRO ANALYTICAL INSTRUMENTS GmbH","Almanya","H4","H4-F150","Metal analizi için sabit ve mobil optik emisyon (OES) ve XRF spektrometreleri","Spektrometre/analizör başına 30–250 bin $"],
+ [9,"HITACHI HIGH-TECH ANALYTICAL SCIENCE","Almanya","H4","H4-D133","Metal analizi için el tipi XRF ve LIBS analizörleri, mobil ve sabit OES spektrometreleri","Spektrometre/analizör başına 30–250 bin $"],
+ [10,"THERMO FISHER SCIENTIFIC (ECUBLENS)SARL","İsviçre","H4","H4-B104","Metal endüstrisi için ARL markalı OES ve XRF spektrometreleri ile otomatik laboratuvar çözümleri","Spektrometre/analizör başına 30–250 bin $"],
+ [11,"EXONE GMBH","Almanya","H6","H6-C155","Döküm kum kalıp ve maça üretimi için endüstriyel 3D yazıcılar (binder jetting) ve baskı hizmetleri","Yazıcı başına 0,5–2 milyon $"],
+ [12,"PCE INSTRUMENTS","Almanya","H8","H8-C140","Ölçüm ve test cihazları: sertlik, kalınlık, sıcaklık, nem ve titreşim ölçerler, laboratuvar ekipmanları","Cihaz başına 1–50 bin $; NDT/muayene sistemleri 100 bin – 1 milyon $"],
+ [13,"BUEHLER","ABD","H8","H8-E100","Metalografik numune hazırlama ekipmanları (kesme, kalıplama, taşlama, parlatma), sertlik test cihazları ve sarf malzemeleri","Numune hazırlama makinesi başına 10–80 bin $"],
+ [14,"SECO / WARWICK S.A","Polonya","H8","H8-A135","Vakumlu ısıl işlem fırınları, vakum indüksiyon ergitme (VIM) fırınları, atmosfer fırınları ve alüminyum ısıl işlem hatları","Vakum fırını başına 0,5–5 milyon $"],
+ [15,"FOERSTER GMBH & CO. KG","Almanya","H8","H8-C140","Girdap akımı (eddy current) ve manyetik tahribatsız muayene (NDT) sistemleri; çubuk, tel ve boru kontrolü","Cihaz başına 1–50 bin $; NDT/muayene sistemleri 100 bin – 1 milyon $"],
+ [16,"INSTRON","ABD","H8","H8-E100","Çekme, basma, yorulma ve darbe testleri için malzeme test makineleri ve yazılımları","Test makinesi başına 50–500 bin $"],
+ [17,"BRUKER NANO GMBH","Almanya","H4","H4-E145","Elektron mikroskopları için EDS/EBSD analiz sistemleri, mikro-XRF ve yüzey ölçüm cihazları","Spektrometre/analizör başına 30–250 bin $"],
+ [18,"HONEYWELL ECLIPSE","İrlanda","H4","H4-B102","Endüstriyel ısıtma ve ergitme fırınları için brülörler ve yanma sistemleri","Fırın/sistem başına 200 bin – 5 milyon $"],
+ [19,"MULTISERW","Polonya","H8","H8-E120","Döküm kumu ve kalıp malzemeleri için test cihazları ve laboratuvar ekipmanları","Cihaz başına 1–50 bin $; NDT/muayene sistemleri 100 bin – 1 milyon $"],
+ [20,"TIMKEN COMPANY","ABD","H6","H6-C137","Haddehaneler ve ağır sanayi için konik makaralı rulmanlar, dişli kutuları ve güç aktarım ürünleri","Rulman başına 50 $ – 50 bin $ (ağır hadde ebatları 5–50 bin $)"]
+].map(r=>({id:String(r[0]),rank:r[0],name:r[1],country:r[2],hall:r[3],stand:r[4],offer:r[5],price:r[6]}));
+
+const KEY = "fairVisitGuide.v1";
+const STATUSES = [
+  {k:"todo",   label:"Ziyaret edilecek"},
+  {k:"visited",label:"Ziyaret edildi"},
+  {k:"follow", label:"Takip gerekli"},
+  {k:"absent", label:"Standda kimse yok"},
+  {k:"skip",   label:"Atlandı"}
+];
+const STATUS_LABEL = Object.fromEntries(STATUSES.map(s=>[s.k,s.label]));
+const DOT = {todo:"#1f4e79",visited:"#1a7f4b",follow:"#d48a00",absent:"#b42318",skip:"#98a2b3"};
+
+/* ---------- Kayıt: telefonda önbellek + Supabase'de ortak kayıt ---------- */
+const FAIR = "metal-fuar-2026";
+const SB_URL = "https://ovjdxocmwrbjxkfrbwin.supabase.co/rest/v1/fair_visits";
+const SB_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92amR4b2Ntd3JianhrZnJid2luIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMwOTY3NjEsImV4cCI6MjA5ODY3Mjc2MX0.4yHaaY3BzSdKSomHhPeoMCQ7HzO7hz7ssjTV-bt1ZaI";
+let store = {visits:{}, extra:[], pending:{}};
+function load(){ try{ const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.visits) store={visits:s.visits||{},extra:s.extra||[],pending:s.pending||{}}; }catch(e){} }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(store)); }catch(e){} return true; }
+load();
+
+// erişim anahtarı linkte gelir: ...#k=ANAHTAR — bir kez kaydedilir
+function accessKey(){
+  const m=/[#&]k=([\w-]+)/.exec(location.hash);
+  if(m){ try{ localStorage.setItem("fairKey",m[1]); }catch(e){} history.replaceState(null,"",location.pathname); return m[1]; }
+  try{ return localStorage.getItem("fairKey")||""; }catch(e){ return ""; }
+}
+const FKEY = accessKey();
+const sbHeaders = extra => Object.assign({apikey:SB_ANON, Authorization:"Bearer "+SB_ANON, "x-fair-key":FKEY, "Content-Type":"application/json"}, extra||{});
+
+function rowData(id){
+  const d=Object.assign({}, store.visits[id]||{status:"todo"});
+  const c=store.extra.find(x=>x.id===id); if(c) d.company=c;
+  if(store.deleted && store.deleted[id]) d.deleted=true;
+  return d;
+}
+// bir firmanın kaydını değiştirince çağrılır: yerelde sakla + buluta gönder
+function commit(id){ store.pending[id]=true; save(); clearTimeout(commit.t); commit.t=setTimeout(flush,400); setSync(); }
+
+let syncState="idle";
+async function flush(){
+  const ids=Object.keys(store.pending); if(!ids.length||!FKEY) { setSync(); return; }
+  try{
+    const body=ids.map(id=>({id:FAIR+":"+id, fair:FAIR, cid:id, data:rowData(id), updated_at:new Date().toISOString()}));
+    const r=await fetch(SB_URL+"?on_conflict=id",{method:"POST",headers:sbHeaders({Prefer:"resolution=merge-duplicates,return=minimal"}),body:JSON.stringify(body)});
+    if(!r.ok) throw new Error(r.status);
+    ids.forEach(id=>delete store.pending[id]); save(); syncState="ok";
+  }catch(e){ syncState=navigator.onLine===false?"offline":"error"; }
+  setSync();
+}
+async function pull(){
+  if(!FKEY) return;
+  try{
+    const r=await fetch(SB_URL+"?fair=eq."+encodeURIComponent(FAIR)+"&select=cid,data",{headers:sbHeaders()});
+    if(!r.ok) throw new Error(r.status);
+    const rows=await r.json(); let changed=false;
+    for(const {cid,data} of rows){
+      if(store.pending[cid]) continue;              // yerel değişiklik henüz gönderilmedi — onu koru
+      const cur=store.visits[cid];
+      if(cur && (cur.updated||"")>=(data.updated||"")) continue;
+      const {company,deleted,...v}=data;
+      if(deleted){ store.extra=store.extra.filter(x=>x.id!==cid); delete store.visits[cid]; changed=true; continue; }
+      if(company && !store.extra.some(x=>x.id===cid)) store.extra.push(company);
+      store.visits[cid]=v; changed=true;
+    }
+    syncState="ok"; save();
+    if(changed && !sheet.classList.contains("open")) renderList();
+  }catch(e){ syncState=navigator.onLine===false?"offline":"error"; }
+  setSync();
+}
+function setSync(){
+  const el=document.getElementById("syncTxt"); if(!el) return;
+  const n=Object.keys(store.pending).length;
+  el.textContent = !FKEY ? "⚠ Erişim anahtarı yok — notlar yalnızca bu telefonda"
+    : n ? `⏳ ${n} kayıt gönderilmeyi bekliyor${syncState==="offline"?" (internet yok)":""}`
+    : syncState==="error" ? "⚠ Sunucuya ulaşılamadı — notlar telefonda güvende"
+    : syncState==="ok" ? "☁ Tüm notlar buluta kaydedildi" : "☁ Bağlanıyor…";
+}
+
+const all = () => BASE.concat(store.extra);
+const visit = id => store.visits[id] || {status:"todo"};
+const esc = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm = s => String(s||"").toLocaleLowerCase("tr").normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/ı/g,"i");
+
+function parseStand(stand){
+  const m = /^H?(\d+)\s*-\s*([A-Z])\s*(\d+)/i.exec(stand||"");
+  return m ? {hall:"H"+m[1], row:m[2].toUpperCase(), num:+m[3]} : null;
+}
+function standSort(a,b){
+  const pa=parseStand(a.stand)||{}, pb=parseStand(b.stand)||{};
+  return (a.hall||"").localeCompare(b.hall||"",undefined,{numeric:true}) || (pa.row||"").localeCompare(pb.row||"") || (pa.num||0)-(pb.num||0) || a.rank-b.rank;
+}
+
+/* ---------- Filtreler ---------- */
+let fHall="all", fStatus="all", q="";
+function halls(){ return [...new Set(all().map(c=>c.hall))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true})); }
+
+function renderChips(){
+  document.getElementById("hallChips").innerHTML =
+    ["all",...halls()].map(h=>`<button class="chip ${fHall===h?"on":""}" data-h="${esc(h)}">${h==="all"?"Tüm salonlar":esc(h)}</button>`).join("");
+  const counts = {all:all().length}; STATUSES.forEach(s=>counts[s.k]=0);
+  all().forEach(c=>counts[visit(c.id).status]++);
+  const tabs=[["all","Tümü"],["todo","Gidilecek"],["visited","Gidildi"],["follow","Takip"]];
+  document.getElementById("statusTabs").innerHTML =
+    tabs.map(([k,l])=>`<button class="chip ${fStatus===k?"on":""}" data-s="${k}">${l} (${counts[k]})</button>`).join("");
+}
+
+function matches(c){
+  if(fHall!=="all" && c.hall!==fHall) return false;
+  const st=visit(c.id).status;
+  if(fStatus!=="all" && st!==fStatus) return false;
+  if(!q) return true;
+  const v=visit(c.id);
+  const hay=norm([c.name,c.country,c.hall,c.stand,c.stand.replace(/-/g,""),c.offer,c.price,v.notes,v.contact].join(" "));
+  return norm(q).split(/\s+/).filter(Boolean).every(t=>hay.includes(t.replace(/-/g,"")) || hay.includes(t));
+}
+
+// ziyaret zamanı yerel saat olarak "YYYY-MM-DDTHH:MM" biçiminde saklanır
+const nowLocal = () => { const d=new Date(); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); return d.toISOString().slice(0,16); };
+const fmtWhen = s => { const [d,t]=String(s).split("T"); if(!t) return s; const [y,m,dd]=d.split("-"); return `${dd}.${m}.${y} ${t}`; };
+function markVisited(id){
+  const v=Object.assign({status:"todo"},visit(id));
+  if(v.status==="todo") v.status="visited";
+  if(!v.visitedAt) v.visitedAt=nowLocal();
+  v.updated=new Date().toISOString(); store.visits[id]=v; commit(id);
+}
+
+function sameStand(c){ return all().filter(o=>o.id!==c.id && o.stand===c.stand); }
+
+function renderList(){
+  renderChips();
+  const items = all().filter(matches).sort(standSort);
+  const el=document.getElementById("list");
+  if(!items.length){ el.innerHTML=`<div class="empty">Eşleşen firma yok.<br><br><button class="btn" id="addFromSearch">＋ “${esc(q)||"yeni firma"}” ekle</button></div>`;
+    document.getElementById("addFromSearch").onclick=()=>openAdd(q); }
+  else {
+    let html="", last="";
+    for(const c of items){
+      if(c.hall!==last){ last=c.hall; const n=items.filter(x=>x.hall===c.hall).length; html+=`<div class="hallhead">Salon ${esc(c.hall)} · ${n}</div>`; }
+      const v=visit(c.id), p=parseStand(c.stand), sh=sameStand(c);
+      html+=`<div class="card" data-id="${esc(c.id)}">
+        <div class="stand">${esc(c.hall)}<b>${p?esc(p.row+p.num):esc(c.stand)}</b></div>
+        <div class="main">
+          <div class="name">${esc(c.name)} <span class="badge b-${v.status}">${STATUS_LABEL[v.status]}</span>${v.rating?` <span class="meta">${"★".repeat(v.rating)}</span>`:""}</div>
+          <div class="meta">#${esc(c.rank)} · ${esc(c.country)} · ${esc(c.stand)}</div>
+          <div class="offer">${esc(c.offer)}</div>
+          ${v.visitedAt?`<div class="when">✓ Ziyaret: ${esc(fmtWhen(v.visitedAt))}</div>`:""}
+          ${sh.length?`<div class="shared">Ortak stand: ${sh.map(o=>esc(o.name)).join(", ")}</div>`:""}
+        </div>
+        <button class="quick ${v.visitedAt?"done":""}" data-quick="${esc(c.id)}" title="Ziyaret edildi olarak işaretle">${v.visitedAt?"✓ Gidildi":"✓ Gittim"}</button></div>`;
+    }
+    el.innerHTML=html;
+  }
+  const done=all().filter(c=>["visited","follow","absent","skip"].includes(visit(c.id).status)).length, tot=all().length;
+  document.getElementById("progTxt").textContent=`${done} / ${tot} tamamlandı`;
+  document.getElementById("progBar").style.width=(tot?done/tot*100:0)+"%";
+}
+
+/* ---------- Salon şeması ---------- */
+function hallMap(hall, selId){
+  const list=all().filter(c=>c.hall===hall);
+  const pts=list.map(c=>({c,p:parseStand(c.stand)})).filter(x=>x.p);
+  const rows=[...new Set(["A","B","C","D","E","F",...pts.map(x=>x.p.row)])].sort();
+  const nums=pts.map(x=>x.p.num); let lo=Math.min(100,...nums), hi=Math.max(180,...nums);
+  lo=Math.floor(lo/10)*10; hi=Math.ceil(hi/10)*10;
+  const W=340, H=260, L=34, R=14, T=26, B=16;
+  const x=r=>L+(rows.indexOf(r)+.5)*(W-L-R)/rows.length;
+  const y=n=>T+(n-lo)/(hi-lo||1)*(H-T-B);
+  let s=`<svg class="map" viewBox="0 0 ${W} ${H}" role="img" aria-label="Salon ${esc(hall)} şeması">`;
+  s+=`<rect x="${L-8}" y="${T-14}" width="${W-L-R+16}" height="${H-T-B+22}" rx="8" fill="none" stroke="var(--line)" stroke-width="2"/>`;
+  rows.forEach(r=>{ s+=`<line x1="${x(r)}" y1="${T}" x2="${x(r)}" y2="${H-B}" stroke="var(--line)" stroke-width="10" stroke-linecap="round" opacity=".55"/>
+    <text x="${x(r)}" y="${T-4}" text-anchor="middle" font-size="11" font-weight="700" fill="var(--muted)">${r}</text>`; });
+  for(let n=lo;n<=hi;n+=20) s+=`<text x="${L-12}" y="${y(n)+4}" text-anchor="end" font-size="9" fill="var(--muted)">${n}</text>`;
+  // aynı standı paylaşan firmalar tek nokta olarak çizilir
+  const groups={}; pts.forEach(x=>(groups[x.c.stand]=groups[x.c.stand]||[]).push(x));
+  let sel=""; const lastY={};
+  Object.values(groups).sort((a,b)=>a[0].p.num-b[0].p.num).forEach(g=>{
+    const {p}=g[0], cx=x(p.row), cy=y(p.num), isSel=g.some(z=>z.c.id===selId);
+    // aynı koridordaki bir önceki standla çakışırsa etiketi sola al
+    const flip=lastY[p.row]!==undefined && cy-lastY[p.row]<12 && !lastY[p.row+"f"];
+    lastY[p.row]=cy; lastY[p.row+"f"]=flip;
+    const st=g.map(z=>visit(z.c.id).status); const col=DOT[st.includes("todo")?"todo":st[0]];
+    const label=p.row+p.num;
+    const dot=`<g class="mapdot" data-id="${esc(g[0].c.id)}">
+      ${isSel?`<circle class="pulse" cx="${cx}" cy="${cy}" r="9" fill="#e5484d"/>`:""}
+      <circle cx="${cx}" cy="${cy}" r="${isSel?9:7}" fill="${isSel?"#e5484d":col}" stroke="var(--card)" stroke-width="2"/>
+      ${g.length>1?`<text x="${cx}" y="${cy+3.5}" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">${g.length}</text>`:""}
+      <text x="${flip?cx-12:cx+12}" y="${cy+4}" text-anchor="${flip?"end":"start"}" font-size="10" font-weight="${isSel?700:500}" fill="var(--ink)">${label}</text>
+      <title>${esc(g.map(z=>z.c.name).join(" / "))}</title></g>`;
+    if(isSel) sel=dot; else s+=dot;
+  });
+  s+=sel+`</svg>`;
+  return s;
+}
+const mapNote=`<div class="hint">Yalnızca şematiktir — stand kodundan çizilmiştir (harf = koridor, sayı = konum). Tam yer için resmi salon planına / tabelalara bakın.</div>`;
+
+/* ---------- Detay paneli ---------- */
+const sheet=document.getElementById("sheet"), bg=document.getElementById("sheetBg");
+function openSheet(title, html){ document.getElementById("sheetTitle").textContent=title; document.getElementById("sheetBody").innerHTML=html; sheet.scrollTop=0; sheet.classList.add("open"); bg.classList.add("open"); }
+function closeSheet(){ sheet.classList.remove("open"); bg.classList.remove("open"); renderList(); }
+bg.onclick=closeSheet; document.getElementById("sheetClose").onclick=closeSheet;
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeSheet(); });
+
+function openCompany(id){
+  const c=all().find(x=>x.id===id); if(!c) return;
+  const v=Object.assign({status:"todo",rating:0,contact:"",role:"",phone:"",email:"",notes:"",next:"",catalog:false,card:false}, visit(id));
+  const p=parseStand(c.stand), sh=sameStand(c);
+  openSheet(c.name, `
+    <div class="box">
+      <div class="where">
+        <div><small>Salon</small><b>${esc(c.hall)}</b></div>
+        <div><small>Koridor</small><b>${p?esc(p.row):"–"}</b></div>
+        <div><small>Stand</small><b>${esc(c.stand)}</b></div>
+      </div>
+      ${sh.length?`<p class="shared" style="margin:8px 0 0">Aynı standda: ${sh.map(o=>`<a href="#" data-open="${esc(o.id)}">${esc(o.name)}</a>`).join(", ")} — birlikte ziyaret edin.</p>`:""}
+      <div style="margin-top:10px">${hallMap(c.hall,c.id)}</div>${mapNote}
+    </div>
+    <div class="box"><h3>Firma</h3>
+      <div class="kv"><span>Sıra</span><div>#${esc(c.rank)}</div><span>Ülke</span><div>${esc(c.country)}</div>
+      <span>Ürün / hizmet</span><div>${esc(c.offer)}</div><span>Tahmini fiyat</span><div>${esc(c.price)}</div></div>
+    </div>
+    <div class="box" id="visitBox"><h3>Ziyaret notları <span class="saved" id="savedMsg">✓ kaydedildi</span></h3>
+      <label>Durum</label>
+      <div class="seg" id="segStatus">${STATUSES.map(s=>`<button type="button" data-k="${s.k}" class="${v.status===s.k?"on":""}">${s.label}</button>`).join("")}</div>
+      <label>Ziyaret tarihi ve saati</label>
+      <div class="timerow"><input type="datetime-local" id="f_visitedAt" value="${esc(v.visitedAt||"")}"><button type="button" class="btn small" id="nowBtn">Şimdi</button><button type="button" class="btn small" id="clrBtn" aria-label="Temizle">✕</button></div>
+      <label>İlgi düzeyi</label>
+      <div class="stars" id="stars">${[1,2,3,4,5].map(n=>`<button type="button" data-n="${n}" class="${n<=v.rating?"on":""}">★</button>`).join("")}</div>
+      <div class="row2">
+        <div><label>Görüşülen kişi</label><input type="text" id="f_contact" value="${esc(v.contact)}"></div>
+        <div><label>Pozisyon</label><input type="text" id="f_role" value="${esc(v.role)}"></div>
+        <div><label>Telefon</label><input type="tel" id="f_phone" value="${esc(v.phone)}"></div>
+        <div><label>E-posta</label><input type="email" id="f_email" value="${esc(v.email)}"></div>
+      </div>
+      <label>Ziyaret sonrası yorumlar</label>
+      <textarea id="f_notes" placeholder="Görülen ürünler, fiyatlar, teslim süreleri, Rusya/BDT distribütörlüğü, karar verici kim, genel izlenim…">${esc(v.notes)}</textarea>
+      <label>Sonraki adım</label>
+      <input type="text" id="f_next" value="${esc(v.next)}" placeholder="ör. teklif isteği gönder, Cuma'ya kadar katalog gönderecekler">
+      <label><input type="checkbox" id="f_card" ${v.card?"checked":""}> Kartvizit alındı &nbsp; <input type="checkbox" id="f_catalog" ${v.catalog?"checked":""}> Katalog alındı</label>
+      ${v.updated?`<p class="hint">Son kayıt: ${esc(new Date(v.updated).toLocaleString("tr-TR"))}</p>`:""}
+      ${c.custom?`<p><button class="btn small" id="delCustom">Eklenen bu firmayı sil</button></p>`:""}
+    </div>`);
+
+  const body=document.getElementById("sheetBody");
+  const persist=()=>{
+    const cur=Object.assign({},visit(id),{
+      contact:val("f_contact"),role:val("f_role"),phone:val("f_phone"),email:val("f_email"),
+      notes:val("f_notes"),next:val("f_next"),card:chk("f_card"),catalog:chk("f_catalog"),visitedAt:val("f_visitedAt"),updated:new Date().toISOString()});
+    if(!cur.status) cur.status="todo";
+    store.visits[id]=cur;
+    commit(id);
+    { const m=document.getElementById("savedMsg"); m.classList.add("show"); clearTimeout(persist.t); persist.t=setTimeout(()=>m.classList.remove("show"),1200); }
+  };
+  const val=i=>document.getElementById(i).value.trim(), chk=i=>document.getElementById(i).checked;
+  body.querySelectorAll("#visitBox input, #visitBox textarea").forEach(inp=>{
+    inp.addEventListener(inp.type==="checkbox"?"change":"input",()=>{ clearTimeout(persist.d); persist.d=setTimeout(persist,300); });
+  });
+  const vt=document.getElementById("f_visitedAt");
+  document.getElementById("nowBtn").onclick=()=>{ vt.value=nowLocal(); persist(); };
+  document.getElementById("clrBtn").onclick=()=>{ vt.value=""; persist(); };
+  vt.addEventListener("change",persist);
+  body.querySelector("#segStatus").onclick=e=>{ const b=e.target.closest("button"); if(!b) return;
+    body.querySelectorAll("#segStatus button").forEach(x=>x.classList.toggle("on",x===b));
+    // "Ziyaret edildi" / "Takip" seçilince saat boşsa şimdiki zaman yazılır
+    if(["visited","follow"].includes(b.dataset.k) && !vt.value) vt.value=nowLocal();
+    store.visits[id]=Object.assign({},visit(id),{status:b.dataset.k}); persist(); };
+  body.querySelector("#stars").onclick=e=>{ const b=e.target.closest("button"); if(!b) return; let n=+b.dataset.n;
+    if((visit(id).rating||0)===n) n=0;
+    body.querySelectorAll("#stars button").forEach(x=>x.classList.toggle("on",+x.dataset.n<=n));
+    store.visits[id]=Object.assign({status:"todo"},visit(id),{rating:n}); persist(); };
+  body.querySelectorAll("[data-open]").forEach(a=>a.onclick=e=>{e.preventDefault(); openCompany(a.dataset.open);});
+  body.querySelectorAll(".mapdot").forEach(d=>d.onclick=()=>openCompany(d.dataset.id));
+  const del=document.getElementById("delCustom");
+  if(del) del.onclick=()=>{ if(!confirm("Bu firma ve notları silinsin mi?")) return;
+    store.deleted=store.deleted||{}; store.deleted[id]=true; commit(id);
+    store.extra=store.extra.filter(x=>x.id!==id); delete store.visits[id]; save(); closeSheet(); };
+}
+
+function openMaps(){
+  const hs=halls();
+  openSheet("Salon planları", hs.map(h=>{
+    const list=all().filter(c=>c.hall===h).sort(standSort);
+    return `<div class="box"><h3>Salon ${esc(h)} · ${list.length} firma</h3>${hallMap(h,null)}
+      <div class="legend"><span><i style="background:${DOT.todo}"></i>Gidilecek</span><span><i style="background:${DOT.visited}"></i>Gidildi</span><span><i style="background:${DOT.follow}"></i>Takip</span><span><i style="background:${DOT.absent}"></i>Kimse yok</span></div>
+      <ol style="margin:8px 0 0;padding-left:20px;font-size:14px">${list.map(c=>`<li><a href="#" data-open="${esc(c.id)}">${esc(c.stand)} — ${esc(c.name)}</a> <span class="badge b-${visit(c.id).status}">${STATUS_LABEL[visit(c.id).status]}</span></li>`).join("")}</ol></div>`;
+  }).join("")+mapNote);
+  const body=document.getElementById("sheetBody");
+  body.querySelectorAll("[data-open]").forEach(a=>a.onclick=e=>{e.preventDefault(); openCompany(a.dataset.open);});
+  body.querySelectorAll(".mapdot").forEach(d=>d.onclick=()=>openCompany(d.dataset.id));
+}
+
+function openAdd(prefill){
+  openSheet("Firma ekle (listede olmayan)", `<div class="box">
+    <label>Firma adı</label><input type="text" id="a_name" value="${esc(prefill||"")}">
+    <div class="row2"><div><label>Ülke</label><input type="text" id="a_country"></div>
+    <div><label>Stand (ör. H6-C150)</label><input type="text" id="a_stand"></div></div>
+    <label>Ne sunuyorlar</label><textarea id="a_offer" style="min-height:70px"></textarea>
+    <label>Tahmini fiyat</label><input type="text" id="a_price">
+    <p><button class="btn primary" id="a_save">Ekle ve aç</button></p></div>`);
+  document.getElementById("a_save").onclick=()=>{
+    const name=document.getElementById("a_name").value.trim(); if(!name){alert("Firma adını girin");return;}
+    const stand=document.getElementById("a_stand").value.trim().toLocaleUpperCase("en"), p=parseStand(stand);
+    const c={id:"x"+Date.now(),rank:all().length+1,custom:true,name,country:document.getElementById("a_country").value.trim(),
+      hall:p?p.hall:(stand.split("-")[0]||"?"),stand,offer:document.getElementById("a_offer").value.trim(),price:document.getElementById("a_price").value.trim()};
+    store.extra.push(c); store.visits[c.id]={status:"todo",updated:new Date().toISOString()}; commit(c.id); renderList(); openCompany(c.id);
+  };
+}
+
+/* ---------- Dışa / içe aktarma ---------- */
+function download(name, text, type){
+  const blob=new Blob([text],{type}); const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();},500);
+}
+const stamp=()=>new Date().toISOString().slice(0,16).replace(/[:T]/g,"-");
+function rows(){
+  return all().slice().sort(standSort).map(c=>{ const v=visit(c.id); return {
+    "Sıra":c.rank,"Firma":c.name,"Ülke":c.country,"Salon":c.hall,"Stand":c.stand,"Ürün / hizmet":c.offer,"Tahmini fiyat":c.price,
+    "Durum":STATUS_LABEL[v.status],"Ziyaret zamanı":v.visitedAt?fmtWhen(v.visitedAt):"","İlgi":v.rating||"","Görüşülen kişi":v.contact||"","Pozisyon":v.role||"","Telefon":v.phone||"","E-posta":v.email||"",
+    "Kartvizit":v.card?"evet":"","Katalog":v.catalog?"evet":"","Yorumlar":v.notes||"","Sonraki adım":v.next||"",
+    "Güncelleme":v.updated?new Date(v.updated).toLocaleString("tr-TR"):"","Fuarda eklendi":c.custom?"evet":""}; });
+}
+function toCSV(){
+  const r=rows(), h=Object.keys(r[0]); const cell=s=>`"${String(s).replace(/"/g,'""')}"`;
+  return "﻿"+[h.map(cell).join(";"),...r.map(o=>h.map(k=>cell(o[k])).join(";"))].join("\r\n");
+}
+function toText(){
+  return rows().filter(r=>r["Durum"]!==STATUS_LABEL.todo).map(r=>
+    `${r.Stand} — ${r["Firma"]} [${r["Durum"]}${r["Ziyaret zamanı"]?", "+r["Ziyaret zamanı"]:""}${r["İlgi"]?", "+"★".repeat(r["İlgi"]):""}]`+
+    (r["Görüşülen kişi"]?`\nKişi: ${r["Görüşülen kişi"]}${r["Pozisyon"]?" ("+r["Pozisyon"]+")":""} ${r["Telefon"]} ${r["E-posta"]}`.trimEnd():"")+
+    (r["Yorumlar"]?`\n${r["Yorumlar"]}`:"")+(r["Sonraki adım"]?`\nSonraki adım: ${r["Sonraki adım"]}`:"")).join("\n\n") || "Henüz ziyaret kaydı yok.";
+}
+function openMenu(){
+  openSheet("Dışa aktar ve yedekle", `<div class="box"><h3>Rapor</h3>
+    <div class="toolbar"><button class="btn primary" id="e_csv">Excel (CSV) indir</button><button class="btn" id="e_copy">Özet metni kopyala</button></div>
+    <p class="hint">CSV dosyası Excel'de açılır (noktalı virgülle ayrılmış, UTF-8). Özet metin WhatsApp / Telegram / e-postaya yapıştırılabilir.</p>
+    <textarea id="e_text" class="hidden" readonly></textarea></div>
+    <div class="box"><h3>Yedek</h3>
+    <div class="toolbar"><button class="btn" id="e_json">Yedek kaydet (.json)</button><button class="btn" id="e_imp">Yedekten geri yükle</button></div>
+    <p class="hint">Notlar otomatik olarak buluta kaydedilir; internet yoksa telefonda bekler ve bağlantı gelince gönderilir. Yedek dosyası ek güvencedir. Geri yükleme, notları mevcut olanlarla birleştirir.</p></div>
+    <div class="box"><h3>Yenile</h3><button class="btn small" id="e_reset">Buluttan yeniden yükle</button>
+    <p class="hint">Bu cihazdaki önbelleği temizler ve tüm notları buluttan tekrar indirir. Gönderilmemiş kayıt varsa önce onları gönderir.</p></div>`);
+  document.getElementById("e_csv").onclick=()=>download(`fuar-ziyaretleri-${stamp()}.csv`,toCSV(),"text/csv;charset=utf-8");
+  document.getElementById("e_json").onclick=()=>download(`fuar-ziyaretleri-yedek-${stamp()}.json`,JSON.stringify(store,null,1),"application/json");
+  document.getElementById("e_copy").onclick=async()=>{ const t=toText(), ta=document.getElementById("e_text");
+    try{ await navigator.clipboard.writeText(t); alert("Özet kopyalandı."); }
+    catch(e){ ta.value=t; ta.classList.remove("hidden"); ta.focus(); ta.select(); alert("Aşağıdaki metni seçip kopyalayın."); } };
+  document.getElementById("e_imp").onclick=()=>document.getElementById("importFile").click();
+  document.getElementById("e_reset").onclick=async()=>{
+    await flush();
+    if(Object.keys(store.pending).length){ alert("Gönderilmemiş kayıtlar var — internet bağlantısını kontrol edip tekrar deneyin."); return; }
+    store={visits:{},extra:[],pending:{}}; save(); await pull(); closeSheet(); };
+}
+document.getElementById("importFile").onchange=e=>{
+  const f=e.target.files[0]; if(!f) return; const r=new FileReader();
+  r.onload=()=>{ try{ const d=JSON.parse(r.result); if(!d.visits) throw 0;
+      for(const [id,v] of Object.entries(d.visits)){ const cur=store.visits[id];
+        if(!cur || (v.updated||"")>(cur.updated||"")){ store.visits[id]=v; store.pending[id]=true; } }
+      (d.extra||[]).forEach(c=>{ if(!store.extra.some(x=>x.id===c.id)){ store.extra.push(c); store.pending[c.id]=true; } });
+      save(); flush(); alert("Yedek geri yüklendi."); closeSheet();
+    }catch(err){ alert("Bu dosya geçerli bir yedek değil."); } };
+  r.readAsText(f); e.target.value="";
+};
+
+/* ---------- Bağlantılar ---------- */
+document.getElementById("q").addEventListener("input",e=>{ q=e.target.value.trim(); renderList(); });
+document.getElementById("hallChips").onclick=e=>{ const b=e.target.closest("[data-h]"); if(b){ fHall=b.dataset.h; renderList(); } };
+document.getElementById("statusTabs").onclick=e=>{ const b=e.target.closest("[data-s]"); if(b){ fStatus=b.dataset.s; renderList(); } };
+document.getElementById("list").onclick=e=>{
+  const qb=e.target.closest("[data-quick]");
+  if(qb){ e.stopPropagation(); const id=qb.dataset.quick;
+    if(visit(id).visitedAt){ openCompany(id); return; }   // zaten işaretli: düzenlemek için detayı aç
+    markVisited(id); renderList(); return; }
+  const c=e.target.closest(".card"); if(c) openCompany(c.dataset.id); };
+document.getElementById("btnMaps").onclick=openMaps;
+document.getElementById("btnMenu").onclick=openMenu;
+document.getElementById("btnAdd").onclick=()=>openAdd("");
+renderList(); setSync();
+flush().then(pull);
+setInterval(()=>{ flush().then(pull); }, 30000);
+window.addEventListener("online",()=>flush().then(pull));
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden) flush().then(pull); });
+if("serviceWorker" in navigator && location.protocol==="https:") navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
